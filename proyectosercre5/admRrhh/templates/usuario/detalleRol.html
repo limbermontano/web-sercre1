@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+{% block encabezado %}Gestion rol{% endblock %}
+{% block encabezadofor %} Rol{% endblock %}
+{% block js %}
+<script>
+  function eliminarRolpermiso(id) {
+    Swal.fire({
+      title: "¿ Estas seguro que deseas Eliminar el Registro?",
+      text: "¡ No podras revertir esto!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: true,
+      confirmButtonText: " Si, Eliminar ",
+      cancelButtonText: " Volver ",
+    }).then(function (result) {
+      if (result.isConfirmed) {
+        window.location.href = "/rolPermEliminar/" +id+  " ";
+      }
+    });
+  }
+</script>
+{% endblock %}
+{% block contenido %}
+<div class="card shadow mb-2">
+  <div class="container py-2">
+    <div class="row justify-content-center">
+      <form action="#" method="POST">
+        {% csrf_token %}
+        <div class="row">
+          
+          <div class="col-sm-12">
+            <label for="exampleFormControlInput1" class="form-label">Rol</label>
+            
+            <input type="text"  class="text-uppercase form-control" name="rol_name" value="{{ codigo.name }}" placeholder=""disabled>
+          </div>
+          
+          
+        </div>
+        <br>
+      </form>
+    </div>
+  </div>
+</div>
+<hr style="background-color: red">
+<p><b>Permisos</b></p>
+<hr>
+<!--segundo formulario asignacion-->
+<form action="{% url 'rolPermGuardar' %}" method="POST">
+  {% csrf_token %}
+  <div class="row">
+    <div class="col-sm-4">
+      <label for="exampleFormControlInput1" class="form-label">Permisos</label>
+      <abbr class='fas fa-question-circle' title="Opcion que permite el acceso a las vistas de los formularios"></abbr>
+      <select name="permiso_rol" id="permiso_rol" class="form-control">
+        <option value=""> Selecciona el permiso </option>
+        {% for permiso in permisos %}
+        
+        <option value="{{ permiso.codename }}">{{ permiso.name  }} - {{ permiso.codename  }}</option>
+        
+        {% endfor %}  
+            
+    </select>
+    </div>
+    <input type="number" class="text-uppercase form-control" name="rol_per"value="{{ codigo.id }}"style="display: none;">
+    <input type="text" class="text-uppercase form-control" name="rol_perm"value="{{ codigo.name }}"style="display: none;">
+  </div> 
+    <br>
+  <div class="row">
+    <div class="col-md-12">
+      <a class="btn btn-dark btn-sm "style="float: right"  href="{% url 'rolLista' %}"><i class="fas fa-arrow-left fa- sm"></i>Volver</a>
+      <button type="submit" style="float: right"class="btn btn-success btn-sm mx-1"><i class="fas fa-check fa-sm"></i>Asignar
+      </button>
+      
+    </div>
+  </div>
+  <br>
+  <table class="table table-striped"
+  id="dataTable"
+  width="100%"
+  cellspacing="0"
+  >
+    <thead>
+      <tr>
+        <th>Rol</th>
+        <th>Permiso</th>
+
+        <th style="float: right">Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for grupo in userpermisos %}
+        {% if grupo.id == codigo.id %}
+          {% for permiso in grupo.permissions.all %}
+            <tr>
+              <td>{{ grupo.name }}</td>
+              <td>{{ permiso.codename }}</td>
+              <td style="float: right">
+
+                <a
+                  class="btn btn-danger btn-sm"
+                  href="#"
+                  onclick="eliminarRolpermiso({{ grupo.id }})"
+                  ><i class="fas fa-trash"></i
+                ></a>
+              </td>
+            </tr>
+          {% endfor %}
+        {% endif %}
+    {% endfor %}
+
+ 
+    </tbody>
+  </table>
+</form>
+{% endblock %}
+
+

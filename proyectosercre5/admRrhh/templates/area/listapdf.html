@@ -1,0 +1,41 @@
+
+{% block contenido %}
+{% comment %} <img src="{{ imagen_path }}" alt="Imagen en el PDF" width="300"> {% endcomment %}
+<p style="text-align: left;"><img src="/static/img/logosercre.png" class="img" alt="" width="137" height="67" /></p>
+<p><strong><span style="text-align: left; color: #0000ff;">2023-12-02</span></strong></p>
+<h5 class="title mx-3">{{ codigo.nombre_per }}</h5>
+<p><strong><span style="text-align: left; color: #0000ff;">18:57:21</span></strong></p>
+<h4 style="text-align: center;"><span style="text-decoration: underline;"><strong>DETALLE</strong></span></h4>
+<p style="text-align: left;"><strong>GESTION AREA</strong></p>
+<p style="text-align: left;"><strong>LISTA</strong></p>
+<div class="card shadow mb-4">
+  <div class="card-body">
+    <div class="col-sm-12 col-md-12 col-lg-12 col-xl-12">
+      <div class="table-responsive">
+        <table style="border-collapse: collapse; width: 100%;" border="1">
+          <thead >
+          <tr>
+            <td style="width: 50%; text-align: left; height: 29px;"><strong>&nbsp;ITEM</strong></td>
+            <td style="width: 50%; text-align: left; height: 29px;"><strong>&nbsp;NOMBRE</strong></td>
+          </tr>
+
+          </thead >
+          <tbody style="height: 25px;">
+            {% for area in areas %} {% if area.estado_are == 1 %}
+            <tr>
+              <td>&nbsp;{{forloop.counter }}</td>
+              <td>&nbsp;{{area.nombre_are}}</td>
+              
+            </tr>
+            {% endif %} {% endfor %}
+            </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+
+
+

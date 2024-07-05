@@ -1,0 +1,150 @@
+{% extends "base.html" %}
+{% block encabezado %}Gestion usuario{% endblock %}
+{% block encabezadofor %} Formulario detalle {% endblock %}
+{% block js %}
+<script>
+  function eliminarUserpermiso(id) {
+    Swal.fire({
+      title: "¿ Estas seguro que deseas Eliminar el Registro?",
+      text: "¡ No podras revertir esto!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: true,
+      confirmButtonText: " Si, Eliminar ",
+      cancelButtonText: " Volver ",
+    }).then(function (result) {
+      if (result.isConfirmed) {
+        window.location.href = "/userPermEliminar/" +id+  " ";
+      }
+    });
+  }
+</script>
+{% endblock %}
+{% block contenido %}
+<div class="card shadow mb-2">
+  <div class="container py-2">
+    <div class="row justify-content-center">
+      <form action="#" method="POST">
+        {% csrf_token %}
+        <div class="row">
+          <div class="col-sm-3">
+            <label for="exampleFormControlInput1" class="form-label">Usuario</label>
+              <select  name="usuario_perm" id="usuario_perm"  autofocus class="form-control"disabled>
+                                  
+                {% for usuario in usuarios %}
+                  {% if usuario.id == codigo.id %}
+                    <option value="{{ usuario.id }}">{{ usuario.username}}</option>
+                    
+                  {% endif %} 
+                {% endfor %}
+              </select>
+          </div>
+          <div class="col-sm-2">
+            <label for="exampleFormControlInput1" class="form-label">Super_usuario</label>
+            
+            <input type="text"  class="text-uppercase form-control" name="super_usu" value="{{ codigo.is_superuser }}" placeholder=""disabled>
+          </div>
+          <div class="col-sm-5">
+            <label  class="form-label">E-mail</label>
+            <input type="email"  class="form-control" name="mail_usu" value="{{ codigo.email }}"  placeholder="name@example.com"disabled>
+          </div>
+
+          <div class="col-sm-2">
+            <label for="exampleFormControlInput1" class="form-label">Staff</label>
+            <input type="text"  class="text-uppercase form-control" name="staff_usu" value="{{ codigo.is_staff }}"  placeholder=""disabled>
+          </div>
+          
+        </div>
+        <br>
+      </form>
+    </div>
+  </div>
+</div>
+<hr style="background-color: red">
+<p><b>Permisos</b></p>
+<hr>
+<!--segundo formulario asignacion-->
+<form action="{% url 'userPermGuardar' %}" method="POST">
+  {% csrf_token %}
+  <div class="row">
+    <div class="col-sm-2">
+      <label for="exampleFormControlInput1" class="form-label">Permisos</label>
+      <abbr class='fas fa-question-circle' title="Opcion que permite el acceso a las vistas de los formularios"></abbr>
+      <select name="grupo_perm" id="" class="form-control"required>
+        <option value="">-Seleccione-</option>
+        {% for grupo in todogrupos %}
+        
+        <option value="{{ grupo.name }}">{{ grupo.name  }}</option>
+        
+        {% endfor %}  
+            
+    </select>
+    </div>
+    <input type="number" class="text-uppercase form-control" name="usuario_perm"value="{{ codigo.id}}"style="display: none;">
+    <input type="text" class="text-uppercase form-control" name="usuario_per"value="{{ codigo.username}}"style="display: none;">
+  </div> 
+    <br>
+  <div class="row">
+    <div class="col-md-12">
+      <a class="btn btn-dark btn-sm "style="float: right"  href="{% url 'usuLista' %}"><i class="fas fa-arrow-left fa- sm"></i>Volver</a>
+      <button type="submit" style="float: right"class="btn btn-success btn-sm mx-1"><i class="fas fa-check fa-sm"></i>Asignar
+      </button>
+      
+    </div>
+  </div>
+  <br>
+  <table class="table table-striped"
+  id="dataTable"
+  width="100%"
+  cellspacing="0"
+  >
+    <thead>
+      <tr>
+        <th>Usuario</th>
+        <th>Permiso</th>
+
+        <th style="float: right">Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for usuario in usuarios %}
+        {% if usuario.id == codigo.id %}
+          {% for grupo in usuario.groups.all %}
+            
+              <tr>
+                <td>{{usuario.username}}</td>
+                <td>{{grupo.name }}</td>
+                <td style="float: right">
+                  <form method="post" action="{% url 'userPermEliminar' usuario.id grupo.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger btn-sm"><i class="fas fa-trash"></i></button>
+                  </form>
+                  
+                </td>
+              </tr>
+          {% endfor %}
+        {% endif %}
+      {% endfor %}
+
+
+ 
+    </tbody>
+  </table>
+   {% comment %} <a
+    class="btn btn-success btn-sm"
+    "style="display: none;"
+    style="float: right"
+    href="{% url 'proyListapdf' codigo.id_proy %}"
+    ><i class="fas fa-plus fa-sm"></i> pdf</a
+      > {% endcomment %}
+    {% comment %} <a
+    class="btn btn-success btn-sm"
+    style="float: right"
+    href="{% url 'export-pdf1' codigo.id_proy  %}" target="_blank"
+    ><i class="fas fa-plus fa-sm"></i> PDF</a
+    > {% endcomment %}
+</form>
+{% endblock %}
+
+
