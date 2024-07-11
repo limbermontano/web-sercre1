@@ -3,9 +3,7 @@
 {% block encabezadofor %} 
 Formulario de edicion{% endblock %}
 {% block contenido %}
-
 <div class="container p-3">
-    
   <form action="{% url 'perlActualizar' codigo.id_perl %}" id="formulario5" method="POST">
     {% csrf_token %}
     <div class="row">
@@ -24,7 +22,9 @@ Formulario de edicion{% endblock %}
       </div>
       <div class="col-sm-2" id="grupo__hijo">
         <label for="exampleFormControlInput1" class="form-label">Cantidad-Hijos</label>
-        <input type="text" class="form-control" name="hijos_perl" value="{{ codigo.hijos_perl }}"placeholder=""required>
+        <input type="text" class="form-control" name="hijos_perl" id="hijo" value="{{ codigo.hijos_perl }}"placeholder=""required>
+        <i class="formulario__validacion-estado fas fa-times-circle"></i>
+        <p class="formulario__input-error">Solo puede contener 1 digito numerico</p> 
       </div>
       <div class="col-sm-2">
         <label for="exampleFormControlInput1" class="form-label">Area</label>
@@ -32,7 +32,6 @@ Formulario de edicion{% endblock %}
               {% for area in areas %}
                 {% if area.id_are == codigo.area_perl_id %}
                   <option value="{{ area.id_are }}">{{ area.nombre_are }}</option>
-
                   {% for area in areas %}
                       {% if area.estado_are == 1 %}
                       <option value="{{ area.id_are }}">{{ area.nombre_are }}</option>
@@ -45,12 +44,12 @@ Formulario de edicion{% endblock %}
       <div class="col-sm-2">
         <label for="exampleFormControlInput1" class="form-label">Cargo</label>
             <select  name="cargo_perl" id="inputcargo_perl"   class="form-control">
-              {% for cargo in cargos  %}
+              {% for cargo in cargos %}
                 {% if cargo.id_carg == codigo.cargo_perl_id %}
-                  <option value="{{ cargo.id }}">{{ cargo.nombre_carg }}</option>
+                  <option value="{{ cargo.id_carg }}">{{ cargo.nombre_carg }}</option>
                   {% for cargo in cargos %}
                       {% if cargo.estado_carg == 1 %}
-                      <option value="{{ cargo.id }}">{{ cargo.nombre_carg }}</option>
+                      <option value="{{ cargo.id_carg }}">{{ cargo.nombre_carg }}</option>
                       {% endif %}    
                   {% endfor %}  
                 {% endif %}    
@@ -135,15 +134,19 @@ Formulario de edicion{% endblock %}
       <div class="col-sm-2" id="grupo__ctbanco">
         <label for="exampleFormControlInput1" class="form-label">Cta_Banca.</label>
         <abbr class='fas fa-question-circle' title="Introduce el numero de cuenta del banco de la persona."></abbr>
-        <input type="number" class="text-upperlcase form-control" name="ctaBanc_perl" value="{{codigo.ctaBanc_perl }}" placeholder="">
+        <input type="number" class="text-upperlcase form-control" name="ctaBanc_perl" id="ctbanco" value="{{codigo.ctaBanc_perl }}" placeholder="">
+        <i class="formulario__validacion-estado fas fa-times-circle"></i>
+        <p class="formulario__input-error">El campo solo puede contener maximo 10 digitos</p> 
       </div>
       <div class="col-sm-2" id="grupo__nua">
         <label for="exampleFormControlInput1" class="form-label">Nua.</label>
-        <input type="number" class="text-upperlcase form-control" name="nua_perl" value="{{codigo.nua_perl }}"placeholder="">
+        <input type="number" class="text-upperlcase form-control" name="nua_perl" id="nua" value="{{codigo.nua_perl }}"placeholder="">
+        <i class="formulario__validacion-estado fas fa-times-circle"></i>
+        <p class="formulario__input-error">El campo solo puede contener maximo 8 digitos</p> 
       </div>
       <div class="col-sm-2">
         <label for="exampleFormControlInput1" class="form-label">Cta_Afp.</label>
-            <select  name="ctaAfp_perl" id="ctaAfp_perl"   class="form-control">
+            <select  name="ctaAfp_perl" id="ctaAfp"   class="form-control">
                 <option value="{{ codigo.ctaAfp_perl}}">{{ codigo.ctaAfp_perl}}</option>
                 <option value="Gestora">Gestora</option>
                 <option value="Prevision">Prevision</option>
@@ -154,13 +157,15 @@ Formulario de edicion{% endblock %}
 
       <div class="col-sm-2" id="grupo__seguro">
         <label for="exampleFormControlInput1" class="form-label">N°_Seguro Afp.</label>
-        <input type="number" class="text-upperlcase form-control" name="aseg_perl" value="{{codigo.aseg_perl}}"placeholder="">
+        <input type="number" class="text-upperlcase form-control" name="aseg_perl" id="seguro" value="{{codigo.aseg_perl}}"placeholder="">
+        <i class="formulario__validacion-estado fas fa-times-circle"></i>
+        <p class="formulario__input-error">El campo solo puede contener maximo 10 digitos</p> 
       </div>
       <div class="col-sm-2" id="grupo__sueldo">
         <label for="exampleFormControlInput1" class="form-label">Sueldo.</label>
-        <input type="number" class="text-upperlcase form-control" name="sueldo_perl" value="{{codigo.sueldo_perl}}"placeholder=""required>
+        <input type="number" class="text-upperlcase form-control" name="sueldo_perl" id="sueldo" value="{{codigo.sueldo_perl}}"placeholder=""required>
         <i class="formulario__validacion-estado fas fa-times-circle"></i>
-        <p class="formulario__input-error">El campo solo puede contener maximo 4 digitos</p>
+        <p class="formulario__input-error">El campo solo puede contener maximo 4 digitos</p> 
       </div>
     </div>
       <br>  

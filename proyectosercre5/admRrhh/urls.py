@@ -178,4 +178,6 @@ urlpatterns = [
     path('areGuardarM',views.areGuardarM, name='areGuardarM'),
     path('cargGuardarM',views.cargGuardarM, name='cargGuardarM'),
     path('profGuardarM',views.profGuardarM, name='profGuardarM'),
+    #OTROS
+    
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

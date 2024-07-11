@@ -1,6 +1,6 @@
 {% extends "base.html" %} 
 {% block encabezado %}Gestion reportes {% endblock %}
-{% block encabezadofor %} Lista proyectos y etapas actual {% endblock %}
+{% block encabezadofor %} Lista de proyectos y etapas actuales {% endblock %}
 
 {% block contenido %}
 <div class="col-md-12">
@@ -48,33 +48,33 @@
               <th>Fiscal</th>
               <th>Sistema</th>
               <th>Fecha de asignacion</th>
-              <th>Asignado actualmente</th>
+              <th>Etapa Asignado</th>
               <th>Observaciones</th>
             </tr>
           </thead>
 
           <tbody style="text-align: left;">
             {% for proyecto in proyectos_sin_asignacion %}
-            <tr>
-                <td>{{ proyecto.nombre_proy}}</td>
-                <td>{{ proyecto.ubicacion_proy}}</td>
-                <td>{{ proyecto.fiscal_proy.nombre_fis}} {{ proyecto.fiscal_proy.apellidoP_fis}}</td>.
-                <td>{{ proyecto.fiscal_proy.zona_fis.nombre_zon}}</td>
-                <td>{{ proyecto.fechaRecep_proy}}</td>
-                <td>Inicio </td>
-                <td>{{ proyecto.nota_proy}}</td>
-            </tr>
+              <tr>
+                  <td>{{ proyecto.nombre_proy}}</td>
+                  <td>{{ proyecto.ubicacion_proy}}</td>
+                  <td>{{ proyecto.fiscal_proy.nombre_fis}} {{ proyecto.fiscal_proy.apellidoP_fis}}</td>.
+                  <td>{{ proyecto.fiscal_proy.zona_fis.nombre_zon}}</td>
+                  <td>{{ proyecto.fechaRecep_proy}}</td>
+                  <td>Inicio </td>
+                  <td>{{ proyecto.nota_proy}}</td>
+              </tr>
             {% endfor %}
             {% for asignacion in asignaciones_destacadas %}
-            <tr>
-                <td>{{ asignacion.proyecto_asig.nombre_proy }}</td>
-                <td>{{ asignacion.proyecto_asig.ubicacion_proy}}</td>
-                <td>{{ asignacion.proyecto_asig.fiscal_proy.nombre_fis}} {{ asignacion.proyecto_asig.fiscal_proy.apellidoP_fis}}</td>
-                <td>{{ asignacion.proyecto_asig.fiscal_proy.zona_fis.nombre_zon }}</td>
-                <td>{{ asignacion.fechaIni_asig }}</td>
-                <td>{{ asignacion.personal_asig.cargo_perl.nombre_carg }}</td>
-                <td>{{ asignacion.nota_asig }}</td>
-            </tr>
+              <tr>
+                  <td>{{ asignacion.proyecto_asig.nombre_proy }}</td>
+                  <td>{{ asignacion.proyecto_asig.ubicacion_proy}}</td>
+                  <td>{{ asignacion.proyecto_asig.fiscal_proy.nombre_fis}} {{ asignacion.proyecto_asig.fiscal_proy.apellidoP_fis}}</td>
+                  <td>{{ asignacion.proyecto_asig.fiscal_proy.zona_fis.nombre_zon }}</td>
+                  <td>{{ asignacion.fechaIni_asig }}</td>
+                  <td>{{ asignacion.personal_asig.cargo_perl.nombre_carg }}</td>
+                  <td>{{ asignacion.nota_asig }}</td>
+              </tr>
             {% endfor %}
 
           </tbody>
