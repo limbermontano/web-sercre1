@@ -61,10 +61,11 @@ def areLista(resquest):
             Q(nombre_are__icontains=busqueda)
         ).distinct()
 
-    elementos_por_pagina = 15
+    elementos_por_pagina = 10
     paginator = Paginator(areas, elementos_por_pagina)
     page = resquest.GET.get("page", 1)
     try:
+        
         areas = paginator.page(page)
     except PageNotAnInteger:
         areas = paginator.page(1)
@@ -140,8 +141,11 @@ def cargLista(resquest):
     if not resquest.user.has_perm('admRrhh.view_cargo'):
         messages.error(resquest, "No tienes permiso para esta opcion, ponte en contacto con el administrador (TI).")
         return redirect('grafana_etapas') 
-    # Obtener solo los nombres distintos de cargos activos
-    cargos = Cargo.objects.filter(estado_carg=1).values('nombre_carg').distinct()
+
+    nombre = Cargo.objects.values('nombre_carg').distinct()
+    cantidad = Cargo.objects.count()
+    numeros = range(1, cantidad+1)
+    cargos = Cargo.objects.filter(estado_carg=1).order_by('-id_carg') 
     busqueda = resquest.GET.get("buscar")
 
     if busqueda:
@@ -149,18 +153,18 @@ def cargLista(resquest):
             Q(nombre_carg__icontains=busqueda)
         ).distinct()
 
-    elementos_por_pagina = 15
+    elementos_por_pagina = 10
     paginator = Paginator(cargos, elementos_por_pagina)
     page = resquest.GET.get("page", 1)
 
     try:
-        cargos = paginator.page(page)
+         cargos = paginator.page(page)
     except PageNotAnInteger:
         cargos = paginator.page(1)
     except EmptyPage:
         cargos = paginator.page(paginator.num_pages)
 
-    return render(resquest, 'cargo/lista.html', {'cargos':cargos})
+    return render(resquest, 'cargo/lista.html', {'cargos': cargos, 'numeros': numeros})
 def cargCrear(resquest):
     return render(resquest, 'cargo/crear.html')
 def cargGuardar(resquest):
@@ -298,7 +302,7 @@ def estLista(resquest):
         estudios = Estudio.objects.filter(
             Q(nombre_est__icontains=busqueda)
         ).distinct()
-    elementos_por_pagina = 15
+    elementos_por_pagina = 10
     paginator = Paginator(estudios, elementos_por_pagina)
     page = resquest.GET.get("page", 1)
 
@@ -364,7 +368,7 @@ def profLista(resquest):
         profesiones = Profesion.objects.filter(
             Q(nombre_prof__icontains=busqueda)
         ).distinct()
-    elementos_por_pagina = 15
+    elementos_por_pagina = 10
     paginator = Paginator(profesiones, elementos_por_pagina)
     page = resquest.GET.get("page", 1)
 
@@ -446,7 +450,7 @@ def perLista(resquest):
             Q(direccion_per__icontains=busqueda) 
             
         ).distinct()
-    elementos_por_pagina = 15
+    elementos_por_pagina = 10
     paginator = Paginator(personas, elementos_por_pagina)
     page = resquest.GET.get("page", 1)
 
@@ -670,7 +674,7 @@ def perlActualizar(resquest, id):
     hijos = resquest.POST["hijos_perl"]
     fechIngre = resquest.POST["fechIngre_perl"]
     fechNac = resquest.POST["fechNac_perl"]
-    venDoc = resquest.POST["vencDoc_perl"]
+    venDoc = resquest.POST["venDoc_perl"]
     licCond = resquest.POST["licCond_perl"]
     tipoLic = resquest.POST["tipoLic_perl"]
     fechVenlic = resquest.POST["fechVenlic_perl"]
@@ -1103,7 +1107,7 @@ def parLista(resquest):
         parentescos = Parentesco.objects.filter(
             Q(nombre_par__icontains=busqueda)
         ).distinct()
-    elementos_por_pagina = 15
+    elementos_por_pagina = 10
     paginator = Paginator(parentescos, elementos_por_pagina)
     page = resquest.GET.get("page", 1)
     try:
@@ -1446,8 +1450,9 @@ def usuLista(resquest):
 def usuCrear(resquest):
     personas = Persona.objects.all()
     proyectos = Proyecto.objects.all()
-    personales= Personal.objects.filter(area_perl__nombre_are__in=['Administracion','Diseño','Contabilidad','Almacen'])
-    return render(resquest, 'usuario/crear.html',{'personales': personales,'personas': personas, 'proyectos': proyectos})
+    personales = Personal.objects.all()
+    areas = Area.objects.filter(nombre_are__in=['Administracion','Ingenieria','Diseño','Almacen'])
+    return render(resquest, 'usuario/crear.html',{'personales': personales,'personas': personas, 'areas': areas, 'proyectos': proyectos})
 def usuGuardar(resquest):
     if resquest.method == 'POST':
         nombre = resquest.POST["persona_usu"]
@@ -1456,10 +1461,12 @@ def usuGuardar(resquest):
         correo = resquest.POST["mail_usu"]
         # Utilizar make_password para cifrar la contraseña
         password_cifrada = make_password(password)
-        if User.objects.filter(username=nombre).exists():
-            messages.error(resquest, "Ya existe un dato registrado con este nombre.")
-            
-            return redirect('usuCrear')
+        if User.objects.filter(username__iexact=nombre).exists():
+            messages.error(resquest, "Ya existe un dato con este nombre.")
+            context = {
+             'messages': messages.get_messages(resquest),
+            }
+            return render(resquest, 'usuario/crear.html',context)
         # Crear el usuario utilizando create y asignar la contraseña cifrada
         usuario = User.objects.create(
             username=nombre.title(),
@@ -1471,12 +1478,12 @@ def usuGuardar(resquest):
         messages.success(resquest, "SE REGISTRÓ CORRECTAMENTE")
         return redirect('usuLista')
 def usuEditar(resquest, id):
-    # personas = Persona.objects.filter(estado_per = 1).order_by('-id_per')
+    personas = Persona.objects.filter(estado_per = 1).order_by('-id_per')
+    proyectos = Proyecto.objects.all()
     grupos = Group.objects.all()
     usuarios = User.objects.filter(is_active = 1).order_by('-id')
-    personales= Personal.objects.filter(area_perl__nombre_are__in=['Administracion','Diseño','Contabilidad','Almacen'])
     codigo = User.objects.get(id=id)
-    return render(resquest, 'usuario/editar.html', {'grupos': grupos,'codigo': codigo,'usuarios': usuarios,'personales': personales})
+    return render(resquest, 'usuario/editar.html', {'grupos': grupos,'codigo': codigo,'usuarios': usuarios,'personas': personas})
 def usuActualizar(resquest, id):
     if resquest.method == 'POST':
         nombre = resquest.POST["persona_usu"]
@@ -1488,8 +1495,8 @@ def usuActualizar(resquest, id):
         # Verificar si superusu es '1'
         # is_superuser = True if superusu == '1' else False
         usuario = User.objects.get(id=id)
-        if User.objects.exclude(id=id).filter(username=nombre).exists():
-            messages.error(resquest, "Ya existe un dato registrado con este nombre.")
+        if User.objects.exclude(id=id).filter(username__iexact=nombre).exists():
+            messages.error(resquest, "Ya existe un dato con este nombre.")
             return redirect('usuEditar', usuario.id)
         usuario.username= nombre.title()
         usuario.password= password_cifrada
@@ -1723,8 +1730,7 @@ def permDetalleM(resquest, id):
 def reproyLista(resquest):
     proyectos_sin_asignacion = repinicio(resquest)
     asignaciones_destacadas = repetapas(resquest)
-    asignaciones = Asignacion.objects.filter(estado_asig=1).order_by('-id_asig')
-
+    asignaciones = Asignacion.objects.all()
     busqueda = resquest.GET.get("buscar")
     if busqueda:
         asignaciones = Asignacion.objects.filter(
@@ -1737,13 +1743,13 @@ def reproyLista(resquest):
     paginator = Paginator(asignaciones, elementos_por_pagina)
     page = resquest.GET.get("page", 1)
     try:
-        asignaciones = paginator.page(page)
+     asignaciones = paginator.page(page)
     except PageNotAnInteger:
         asignaciones = paginator.page(1)
     except EmptyPage:
         asignaciones = paginator.page(paginator.num_pages)
     return render(resquest, 'reporte/lista.html', {
-    'proyectos_sin_asignacion': proyectos_sin_asignacion, 'asignaciones': asignaciones, 'asignaciones_destacadas': asignaciones_destacadas, 
+     'asignaciones': asignaciones, 'proyectos_sin_asignacion': proyectos_sin_asignacion, 'asignaciones_destacadas': asignaciones_destacadas 
     })
 def repListapdf(resquest):    #probando
     asignaciones = Asignacion.objects.filter(estado_asig = 1).order_by('-id_asig')
@@ -1772,7 +1778,6 @@ def export_pdf2(resquest):
     response = HttpResponse(content_type='application/pdf')
     pisa.CreatePDF(html, dest=response, link_callback=link_callback)
     return response
-    #FUNCIONES DE COMPARACION
 
 def repinicio(resquest): 
     proyectos = Proyecto.objects.filter(estado_proy=1)

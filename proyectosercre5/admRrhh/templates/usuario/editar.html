@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block encabezado %}Gestion usuario{% endblock %}
-{% block encabezadofor %}Formulario Editar Usuario {% endblock %}
+{% block encabezadofor %} Editar Usuario {% endblock %}
 {% block contenido %}
 
 <div class="card shadow mb-2">
@@ -12,23 +12,24 @@
           <div class="col-sm-4">
             <label for="exampleFormControlInput1" class="form-label">Usuario</label>
               <select  name="persona_usu"  autofocus class="form-control">
+                                  
                 {% for usuario in usuarios %}
                   {% if usuario.id == codigo.id %}
                     <option value="{{ usuario.username}}">{{ usuario.username}}</option>
-                    {% for personal in personales %}
-                        
-                        <option value="{{personal.persona_perl.nombre_per }} {{personal.persona_perl.apellidoP_per }} ">{{personal.persona_perl.nombre_per }} {{personal.persona_perl.apellidoP_per }}</option>
-                        
-                    {% endfor %}  
-                  {% endif %}
-                {% endfor %}              
-                
+                    {% for persona in personas %}
+                      {% if persona.estado_per == 1 %}
+                      <option value="{{ persona.nombre_per }} {{ persona.apellidoP_per }}">{{ persona.nombre_per }} {{persona.apellidoP_per }}
+                      </option>
+                      {% endif %}
+                    {% endfor %}
+                  {% endif %} 
+                {% endfor %}
               </select>
           </div>
           
           <div class="col-sm-4">
             <label  class="form-label">Password</label>
-            <!-- <i class="far fa-eye-slash" id="togglePassword"></i> -->
+            <i class="far fa-eye-slash" id="togglePassword"></i>
             <input type="Password"   class="form-control" name="password_usu" value="{{ codigo.password }}"  placeholder="">
           </div>
           <div class="col-sm-4"id="grupo__usuario">
@@ -71,7 +72,7 @@
 
 {% if codigo.is_superuser == 0 %}
   <hr style="background-color: red">
-  <p><b>Formulario Roles</b></p>
+  <p><b>Roles</b></p>
   <hr>
   <!--segundo formulario asignacion-->
     <form action="{% url 'userRolGuardar' %}" id="formulario10" method="POST">

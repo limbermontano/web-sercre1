@@ -38,7 +38,7 @@
             <p class="formulario__input-error">El campo solo puede contener números</p>
           </div>
           <div class="col-sm-2"id="grupo__trafo">
-            <label for="exampleFormControlInput1" class="form-label">Transformador de Ref.</label>
+            <label for="exampleFormControlInput1" class="form-label">Trafo</label>
             <abbr class='fas fa-question-circle' title="Es la placa de los transformadores de luz que tienen como referencia el municipo y la Uv. en la que se encuentran instalados."></abbr>
             <input type="text" class="text-uppercase form-control" name="trafo_proy" id="trafo"  value="{{ codigo.trafo_proy}}"placeholder="">
             <i class="formulario__validacion-estado fas fa-times-circle"></i>
@@ -87,10 +87,8 @@
     </div>
   </div>
 </div>
-<br>
-<p><b>Formulario de Asignacion de proyectos</b></p>
 <hr style="background-color: red">
-
+<p><b>Asignacion de proyectos</b></p>
 
 <!--segundo formulario asignacion-->
 <form action="{% url 'asigGuardetalle' %}" id="formulario6" method="POST">
@@ -115,7 +113,7 @@
     
      
     <div class="col-sm-2">
-      <label for="exampleFormControlInput1" class="form-label">Fecha Inicio-Asiganacion.</label>
+      <label for="exampleFormControlInput1" class="form-label">Fecha Inicio.</label>
       <abbr class='fas fa-question-circle' title="Fecha de inicio para realizacin de proyecto segun su cargo del personal."></abbr>
       <input type="date" class="text-uppercase form-control" name="fechaIni_asig" placeholder=""required>
     </div>
@@ -140,6 +138,12 @@
       href="{% url 'export-pdf1' codigo.id_proy  %}" target="_blank"
       ><i class="fas fa-file-pdf"></i> PDF</a
       >
+      <!-- <a
+      class="btn btn-danger btn-sm"
+      style="float: right"
+      href="{% url 'export-pdf1' codigo.id_proy  %}" target="_blank"
+      ><i class="fas fa-file-pdf"></i> PDF1</a
+      > -->
     </div>
   </div> 
   <br>

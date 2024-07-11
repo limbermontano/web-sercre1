@@ -76,7 +76,7 @@
                   <td>{{cargo.nombre_carg}}</td>
                   <td style="text-align: right;">
                  
-                      <a class="btn btn-primary btn-sm " href="{% url 'cargEditar', cargo.id_carg %}"><i class="fas fa-pen"></i></a>
+                      <a class="btn btn-primary btn-sm " href="{% url 'cargEditar' cargo.id_carg %}"><i class="fas fa-pen"></i></a>
                       |
                       <a class="btn btn-danger btn-sm " href="#" onclick="eliminarCargo('{{ cargo.id_carg }}')"><i class="fas fa-trash"></i></a>
                     
@@ -99,13 +99,6 @@
                           <span aria-hidden="true">&laquo;</span>
                       </a>
                   </li>
-              {% else %}
-                  <li class="page-item disabled">
-                      <span class="page-link">&laquo;&laquo;</span>
-                  </li>
-                  <li class="page-item disabled">
-                      <span class="page-link">&laquo;</span>
-                  </li>
               {% endif %}
       
               <li class="page-item disabled">
@@ -123,17 +116,9 @@
                           <span aria-hidden="true">&raquo;&raquo;</span>
                       </a>
                   </li>
-              {% else %}
-                  <li class="page-item disabled">
-                      <span class="page-link">&raquo;</span>
-                  </li>
-                  <li class="page-item disabled">
-                      <span class="page-link">&raquo;&raquo;</span>
-                  </li>
               {% endif %}
           </ul>
-      </nav>
-      
+        </nav>
       </div>
     </div>  
   </div>
